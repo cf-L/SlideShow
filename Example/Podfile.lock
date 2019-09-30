@@ -1,0 +1,23 @@
+PODS:
+  - SlideShow (0.1.0)
+  - SnapKit (4.2.0)
+
+DEPENDENCIES:
+  - SlideShow (from `../`)
+  - SnapKit
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SnapKit
+
+EXTERNAL SOURCES:
+  SlideShow:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SlideShow: 0becb483f1746c6d73a5e48e7d97377f785a1e10
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+
+PODFILE CHECKSUM: 457309ccf2b36b43911e47cb4c6f76b40532c877
+
+COCOAPODS: 1.7.2
