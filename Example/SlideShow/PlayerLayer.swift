@@ -11,19 +11,20 @@ import AVKit
 
 class PlayerLayer: UIView {
     
-    var avLayer = AVPlayerLayer()
+    override public class var layerClass: AnyClass {
+        return AVPlayerLayer.self
+    }
+    
+    var avLayer: AVPlayerLayer? {
+        return self.layer as? AVPlayerLayer
+    }
 
     var player: AVPlayer? {
         get {
-            return avLayer.player
+            return avLayer?.player
         }
         set {
-            avLayer.player = newValue
+            avLayer?.player = newValue
         }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        avLayer.frame = bounds
     }
 }

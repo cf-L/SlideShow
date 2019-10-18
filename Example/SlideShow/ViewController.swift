@@ -42,8 +42,7 @@ class ViewController: UIViewController {
         let item = sliderShow.makeItem(container: container)
         
         playerLayer.player = AVPlayer(playerItem: item.playerItem)
-//        playerLayer.avLayer?.addSublayer(item.syncLayer)
-        playerLayer.layer.addSublayer(item.syncLayer)
+        playerLayer.avLayer?.addSublayer(item.syncLayer)
         
         playerLayer.player?.play()
     }
