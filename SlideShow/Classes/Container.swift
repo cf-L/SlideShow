@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVKit
 
 public class Container: NSObject {
     
@@ -14,17 +15,17 @@ public class Container: NSObject {
     
     public var resolution = Resolution.default
     
-    public var duration: TimeInterval {
+    public var duration: CFTimeInterval {
         return media.reduce(0, { $0 + $1.duration })
     }
     
-    public func beginTime(fro medium: Medium) -> TimeInterval {
-        guard media.contains(medium) else { return 0 }
+    public func beginTime(for medium: Medium) -> CFTimeInterval {
+        guard media.contains(medium) else { return AVCoreAnimationBeginTimeAtZero }
         
-        var time: TimeInterval = 0
+        var time: CFTimeInterval = AVCoreAnimationBeginTimeAtZero
+        
         for item in media {
             if item == medium { break }
-            
             time += item.duration
         }
         

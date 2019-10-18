@@ -14,7 +14,7 @@ import SlideShow
 class ViewController: UIViewController {
     
     lazy var images: [UIImage?] = {
-        return (0...6).map{ UIImage(named: "image-\($0).jpeg") }
+        return (0...6).map{ UIImage(named: "image\($0).jpeg") }
     }()
     
     lazy var playerLayer: PlayerLayer = {
@@ -42,7 +42,8 @@ class ViewController: UIViewController {
         let item = sliderShow.makeItem(container: container)
         
         playerLayer.player = AVPlayer(playerItem: item.playerItem)
-        playerLayer.avLayer?.addSublayer(item.syncLayer)
+//        playerLayer.avLayer?.addSublayer(item.syncLayer)
+        playerLayer.layer.addSublayer(item.syncLayer)
         
         playerLayer.player?.play()
     }

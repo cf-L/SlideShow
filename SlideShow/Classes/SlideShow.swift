@@ -14,9 +14,15 @@ public class SlideShow: NSObject {
     
     public private(set) var container = Container()
     
-    private let videoTrackId = CMPersistentTrackID(1)
-    private let audioTrackId = CMPersistentTrackID(3)
+    private let videoTrackId = CMPersistentTrackID(1001)
+    private let audioTrackId = CMPersistentTrackID(1003)
     private var composition = AVMutableComposition()
+    
+    private lazy var blankAsset: AVURLAsset? = {
+        guard let url = resourceBundle?.url(forResource: "blank_1080p", withExtension: "mp4")
+            else { return nil }
+        return AVURLAsset(url: url)
+    }()
     
     public func makeItem(container: Container) -> SlideShowPlayerItem {
         self.container = container
@@ -27,6 +33,7 @@ public class SlideShow: NSObject {
         let syncLayer = AVSynchronizedLayer(playerItem: playerItem)
         let imageLayer = createPlayableLayer()
         syncLayer.addSublayer(imageLayer)
+        syncLayer.frame = CGRect(origin: .zero, size: container.resolution.size)
         
         return (playerItem, syncLayer)
     }
@@ -36,7 +43,20 @@ private extension SlideShow {
     
     private func resetComposition() {
         self.composition = AVMutableComposition()
-        _ = composition.addMutableTrack(withMediaType: .video, preferredTrackID: videoTrackId)
+        
+        let compositionVideoTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: videoTrackId)
+        
+        if let track = blankAsset?.tracks(withMediaType: .video).last {
+            
+            let duration = CMTimeMakeWithSeconds(container.duration, preferredTimescale: track.timeRange.duration.timescale)
+            let timeRange = CMTimeRange(start: .zero, duration: duration)
+            
+            do {
+                try compositionVideoTrack?.insertTimeRange(timeRange, of: track, at: .zero)
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 
@@ -52,10 +72,12 @@ private extension SlideShow {
             let layer = medium.imageLayer
             layer.frame = contrainerLayer.bounds
             
-            let fade = CABasicAnimation()
+            let fade = CABasicAnimation(keyPath: "opacity")
             fade.duration = medium.duration
             fade.toValue = 0
-            fade.beginTime = container.beginTime(fro: medium)
+            fade.beginTime = container.beginTime(for: medium)
+            fade.isRemovedOnCompletion = false
+            fade.fillMode = .forwards
             
             layer.add(fade, forKey: "opacity")
             
@@ -63,5 +85,19 @@ private extension SlideShow {
         }
         
         return contrainerLayer
+    }
+}
+
+extension SlideShow {
+    
+}
+
+extension SlideShow {
+    var resourceBundle: Bundle? {
+        let bundle = Bundle(for: SlideShow.self)
+        if let url = bundle.url(forResource: "SlideShow", withExtension: "bundle") {
+            return Bundle(url: url)
+        }
+        return nil
     }
 }
